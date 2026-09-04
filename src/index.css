@@ -11,3 +11,17 @@ html, body, #root {
 body {
   @apply bg-blush-50 text-blush-700 font-sans antialiased;
 }
+
+/* Fix iOS viewport height */
+@supports (height: 100dvh) {
+  .min-h-\[100dvh\] {
+    min-height: 100dvh;
+  }
+}
+
+/* Prevent iOS input zoom */
+@media screen and (max-width: 640px) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
