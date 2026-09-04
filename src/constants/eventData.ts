@@ -1,7 +1,23 @@
 export const CELEBRANT = {
   fullName: "Jamaiah Gabrielle Ticatic Sarabia",
-  shortName: "Jamaiah",
+  nickname: "Gabbie",
   event: "Baptismal Celebration",
+} as const;
+
+export const COVER_TEXT = {
+  opening: "A special day for our little girl...",
+  highlight: "Jamaiah Gabrielle",
+  closing: "is getting baptized! 💕",
+  buttonLabel: "Open Invitation",
+} as const;
+
+export const INVITATION_MESSAGE = {
+  heading: "A Special Invitation for You",
+  paragraphs: [
+    "We would be honored to have you as Gabbie's Ninong/Ninang.",
+    "As she grows, we hope she'll be surrounded by people who will guide her, support her, and love her through every chapter of her life.",
+    "Thank you for accepting this special role in Gabbie's life. 💕",
+  ],
 } as const;
 
 export const EVENT_DATE = "September 27, 2026";
@@ -18,10 +34,7 @@ export const RECEPTION = {
   mapUrl: "https://maps.app.goo.gl/YbKswhpn2ZYtSNrB8",
 } as const;
 
-export const RSVP_CONTACTS = [
-  { name: "Jeneth",  phone: "09174331509" },
-  { name: "Geneber", phone: "09171820022" },
-] as const;
+export const RSVP_HEADING = "We'd love to know how you'll be celebrating with Gabbie.";
 
 export const RSVP_OPTIONS = [
   {
@@ -41,5 +54,31 @@ export const RSVP_OPTIONS = [
   },
 ] as const;
 
-// Paste your Google Apps Script Web App URL here in Step 3
+export const SENDING_LOVE_NOTE =
+  "We completely understand! Thank you for keeping Gabbie in your thoughts and prayers. 💕";
+
+export const THANK_YOU_MESSAGES = {
+  church_reception: {
+    heading: "Thank you, Ninong/Ninang! 💕",
+    lines: [
+      "Your RSVP has been submitted.",
+      "We can't wait to celebrate Gabbie's special day with you!",
+      "See you on September 27!",
+    ],
+  },
+  reception_only: {
+    heading: "Thank you, Ninong/Ninang! 💕",
+    lines: [
+      "Your RSVP has been submitted.",
+      "We can't wait to celebrate with you at the reception!",
+    ],
+  },
+  sending_love: {
+    heading: "Thank you, Ninong/Ninang! 💕",
+    lines: [
+      "We'll miss having you there, but your love and warm wishes for Gabbie mean so much to us.",
+    ],
+  },
+} as const;
+
 export const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwV8-gIfzLAY0yR50JoTksIAx6LE1UGfLmf5xhMKu1Qg25x4okHUlyBuA4WWySz6mvheg/exec";

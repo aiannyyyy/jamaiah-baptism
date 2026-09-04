@@ -2,7 +2,13 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import type { LucideIcon } from "lucide-react";
 import { User, Church, Gift, Heart, MessageCircle, PartyPopper, CheckCircle2 } from "lucide-react";
-import { RSVP_OPTIONS, CELEBRANT } from "../constants/eventData";
+import {
+  RSVP_OPTIONS,
+  RSVP_HEADING,
+  CELEBRANT,
+  SENDING_LOVE_NOTE,
+  THANK_YOU_MESSAGES,
+} from "../constants/eventData";
 import { submitRSVP } from "../utils/submitRSVP";
 import type { RSVPOptionId, SubmitStatus } from "../types";
 
@@ -17,10 +23,11 @@ export default function RSVPForm() {
   const [selected, setSelected] = useState<RSVPOptionId | null>(null);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<SubmitStatus>("idle");
+  const [submittedChoice, setSubmittedChoice] = useState<RSVPOptionId | null>(null);
 
   const canSubmit = name.trim() !== "" && selected !== null && status !== "submitting";
 
-    async function handleSubmit(e: FormEvent) {
+  function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!canSubmit || !selected) return;
 
@@ -35,6 +42,7 @@ export default function RSVPForm() {
       }),
     });
 
+    setSubmittedChoice(selected);
     setStatus("success");
   }
 
@@ -43,10 +51,13 @@ export default function RSVPForm() {
     setSelected(null);
     setMessage("");
     setStatus("idle");
+    setSubmittedChoice(null);
   }
 
-  // ✅ Success screen
-  if (status === "success") {
+  // ✅ Personalized thank you screen
+  if (status === "success" && submittedChoice) {
+    const thankYou = THANK_YOU_MESSAGES[submittedChoice];
+
     return (
       <section className="px-5 pb-6">
         <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 shadow-soft text-center space-y-4">
@@ -57,20 +68,23 @@ export default function RSVPForm() {
           </div>
 
           <h2 className="font-script text-3xl text-blush-600">
-            Thank You!
+            {thankYou.heading}
           </h2>
 
           <div className="flex items-center justify-center gap-2 text-blush-500">
             <CheckCircle2 className="w-5 h-5" />
-            <p className="font-serif text-sm">Your RSVP has been received</p>
+            <p className="font-serif text-sm">RSVP received</p>
           </div>
 
-          <p className="font-serif text-blush-600 text-sm leading-relaxed">
-            We're so excited to celebrate {CELEBRANT.shortName}'s special day
-            with you! See you on September 27 🌸
-          </p>
+          <div className="space-y-2">
+            {thankYou.lines.map((line, i) => (
+              <p key={i} className="font-serif text-blush-600 text-sm leading-relaxed">
+                {line}
+              </p>
+            ))}
+          </div>
 
-          <div className="pt-2 space-y-2">
+          <div className="pt-4 space-y-2">
             <button
               onClick={handleReset}
               className="w-full bg-blush-500 hover:bg-blush-600 text-white font-serif font-semibold py-3 rounded-2xl shadow-soft transition-colors"
@@ -78,7 +92,7 @@ export default function RSVPForm() {
               Submit Another RSVP
             </button>
             <p className="text-xs text-blush-400 font-serif italic">
-              For other guests using the same device
+              For other Ninongs/Ninangs using the same device
             </p>
           </div>
         </div>
@@ -89,7 +103,15 @@ export default function RSVPForm() {
   // 📝 RSVP form
   return (
     <section className="px-5 pb-6">
-      <SectionHeader />
+      <div className="text-center mb-4 flex items-center justify-center gap-2">
+        <Heart className="w-4 h-4 text-blush-500 fill-blush-500" />
+        <h2 className="font-serif italic text-xl text-blush-600">RSVP</h2>
+        <Heart className="w-4 h-4 text-blush-500 fill-blush-500" />
+      </div>
+
+      <p className="font-serif text-blush-700 text-center text-sm mb-4">
+        {RSVP_HEADING}
+      </p>
 
       <form onSubmit={handleSubmit} className="space-y-3">
         <NameInput value={name} onChange={setName} />
@@ -105,9 +127,18 @@ export default function RSVPForm() {
           ))}
         </div>
 
+        {/* Sending Love note — appears when that option is selected */}
+        {selected === "sending_love" && (
+          <div className="bg-blush-100 rounded-2xl p-4 text-center animate-fade-in">
+            <p className="font-serif text-blush-600 text-sm italic leading-relaxed">
+              {SENDING_LOVE_NOTE}
+            </p>
+          </div>
+        )}
+
         <MessageInput value={message} onChange={setMessage} />
 
-        <SubmitButton status={status} disabled={!canSubmit} />
+        <SubmitButton disabled={!canSubmit} />
 
         <p className="text-center text-xs text-blush-500 font-serif italic pt-1">
           We'll use your response for reception headcount and seating arrangement.
@@ -119,16 +150,6 @@ export default function RSVPForm() {
 
 /* --- Sub-components --- */
 
-function SectionHeader() {
-  return (
-    <div className="text-center mb-4 flex items-center justify-center gap-2">
-      <Heart className="w-4 h-4 text-blush-500 fill-blush-500" />
-      <h2 className="font-serif italic text-xl text-blush-600">RSVP</h2>
-      <Heart className="w-4 h-4 text-blush-500 fill-blush-500" />
-    </div>
-  );
-}
-
 function NameInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   return (
     <div className="bg-white/70 backdrop-blur-sm rounded-full px-4 py-3 flex items-center gap-3 shadow-soft">
@@ -137,7 +158,7 @@ function NameInput({ value, onChange }: { value: string; onChange: (v: string) =
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Guest Name (e.g., Ana Dela Cruz)"
+        placeholder="Your Name (e.g., Ana Dela Cruz)"
         className="flex-1 bg-transparent outline-none text-blush-700 placeholder:text-blush-300 font-serif text-sm"
         required
       />
@@ -153,17 +174,33 @@ type OptionCardProps = {
 
 function OptionCard({ option, isSelected, onSelect }: OptionCardProps) {
   const Icon = OPTION_ICONS[option.id];
-  const base = "rounded-2xl p-3 text-center transition-all shadow-soft border-2 flex flex-col items-center";
+  const base =
+    "rounded-2xl p-3 text-center transition-all shadow-soft border-2 flex flex-col items-center";
   const selectedStyle = "bg-blush-500 text-white border-blush-600";
-  const unselectedStyle = "bg-white/70 backdrop-blur-sm text-blush-700 border-transparent hover:border-blush-300";
+  const unselectedStyle =
+    "bg-white/70 backdrop-blur-sm text-blush-700 border-transparent hover:border-blush-300";
 
   return (
-    <button type="button" onClick={onSelect} className={base + " " + (isSelected ? selectedStyle : unselectedStyle)}>
-      <Icon className={"w-6 h-6 mb-1.5 " + (isSelected ? "text-white fill-white/30" : "text-blush-400")} />
+    <button
+      type="button"
+      onClick={onSelect}
+      className={base + " " + (isSelected ? selectedStyle : unselectedStyle)}
+    >
+      <Icon
+        className={
+          "w-6 h-6 mb-1.5 " +
+          (isSelected ? "text-white fill-white/30" : "text-blush-400")
+        }
+      />
       <p className="font-serif font-semibold text-xs leading-tight mb-1 uppercase tracking-wide">
         {option.title}
       </p>
-      <p className={"text-[10px] leading-tight " + (isSelected ? "text-white/90" : "text-blush-500")}>
+      <p
+        className={
+          "text-[10px] leading-tight " +
+          (isSelected ? "text-white/90" : "text-blush-500")
+        }
+      >
         {option.description}
       </p>
     </button>
@@ -171,16 +208,13 @@ function OptionCard({ option, isSelected, onSelect }: OptionCardProps) {
 }
 
 function MessageInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
-  const placeholder =
-    "Leave a short message for " + CELEBRANT.shortName + " (optional)\n(For 'Sending Love From Afar')";
-
   return (
     <div className="bg-white/70 backdrop-blur-sm rounded-2xl px-4 py-3 flex gap-3 shadow-soft">
       <MessageCircle className="w-5 h-5 text-blush-400 shrink-0 mt-1" />
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
+        placeholder={"Leave a short message for " + CELEBRANT.nickname + " (optional)"}
         rows={2}
         className="flex-1 bg-transparent outline-none text-blush-700 placeholder:text-blush-300 font-serif text-sm resize-none"
       />
@@ -188,12 +222,7 @@ function MessageInput({ value, onChange }: { value: string; onChange: (v: string
   );
 }
 
-function SubmitButton({ status, disabled }: { status: SubmitStatus; disabled: boolean }) {
-  const label =
-    status === "submitting" ? "Sending..." :
-    status === "error" ? "Try again" :
-    "Submit RSVP";
-
+function SubmitButton({ disabled }: { disabled: boolean }) {
   return (
     <button
       type="submit"
@@ -201,7 +230,7 @@ function SubmitButton({ status, disabled }: { status: SubmitStatus; disabled: bo
       className="w-full bg-blush-500 hover:bg-blush-600 disabled:bg-blush-300 disabled:cursor-not-allowed text-white font-serif font-semibold py-3 rounded-2xl shadow-soft transition-colors flex items-center justify-center gap-2 mt-1"
     >
       <Heart className="w-4 h-4 fill-white" />
-      {label}
+      Submit RSVP
     </button>
   );
 }

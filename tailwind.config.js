@@ -23,6 +23,15 @@ export default {
       boxShadow: {
         soft: "0 8px 24px -12px rgba(178, 61, 90, 0.25)",
       },
+      keyframes: {
+        "fade-in": {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        "fade-in": "fade-in 0.6s ease-out forwards",
+      },
     },
   },
   plugins: [],
