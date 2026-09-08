@@ -155,7 +155,7 @@ export default function RSVPForm() {
           </div>
         )}
 
-        {selected !== "sending_love" && (
+        {(selected === "church_reception" || selected === "reception_only") && (
           <>
             <ParkingInfoCard />
 
