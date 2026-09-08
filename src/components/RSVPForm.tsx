@@ -111,6 +111,10 @@ export default function RSVPForm() {
       <form onSubmit={handleSubmit} className="space-y-3">
         <NameInput value={name} onChange={setName} />
 
+        <p className="font-serif text-blush-500 text-[11px] sm:text-xs text-center italic">
+          Please select one option below
+        </p>
+
         <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
           {RSVP_OPTIONS.map((opt) => (
             <OptionCard
@@ -151,7 +155,7 @@ function NameInput({ value, onChange }: { value: string; onChange: (v: string) =
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Your Name (e.g., Ana Dela Cruz)"
-        className="flex-1 bg-transparent outline-none text-blush-700 placeholder:text-blush-300 font-serif text-xs sm:text-sm min-w-0"
+        className="flex-1 bg-transparent outline-none text-blush-700 placeholder:text-blush-400 font-serif font-bold text-base sm:text-lg min-w-0"
         required
       />
     </div>

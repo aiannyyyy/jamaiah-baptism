@@ -1,16 +1,25 @@
-import { Heart } from "lucide-react";
+import { Heart, ArrowLeft } from "lucide-react";
 import { INVITATION_MESSAGE } from "../constants/eventData";
 
 const HIGHLIGHT_PHRASE = "Gabbie's Ninong/Ninang";
 
 type Props = {
   onAccept: () => void;
+  onBack: () => void;
 };
 
-export default function SpecialInvitation({ onAccept }: Props) {
+export default function SpecialInvitation({ onAccept, onBack }: Props) {
   return (
-    <section className="px-4 sm:px-5 pt-6 sm:pt-8 pb-4 sm:pb-6">
-      <div className="text-center mb-4 flex items-center justify-center gap-2">
+    <section className="px-4 sm:px-5 pt-4 sm:pt-6 pb-4 sm:pb-6 min-h-[100dvh] flex flex-col justify-center relative">
+      <button
+        onClick={onBack}
+        className="absolute top-4 sm:top-6 left-4 sm:left-5 flex items-center gap-1.5 text-blush-500 hover:text-blush-600 font-serif text-xs sm:text-sm transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back
+      </button>
+
+      <div className="text-center mb-4 flex items-center justify-center gap-2 mt-8 sm:mt-6">
         <Heart className="w-4 h-4 text-blush-500 fill-blush-500 shrink-0" />
         <h2 className="font-serif italic text-3xl sm:text-4xl text-blush-600">
           {INVITATION_MESSAGE.heading}
