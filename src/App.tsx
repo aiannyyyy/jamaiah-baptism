@@ -14,7 +14,9 @@ export default function App() {
     <div className="min-h-screen bg-blush-100 py-0 sm:py-8">
       <div className="max-w-md mx-auto bg-blush-50 sm:shadow-soft sm:rounded-3xl overflow-hidden">
         {step === "cover" && (
-          <CoverSection onOpen={() => setStep("invitation")} />
+          <div className="animate-fade-in">
+            <CoverSection onOpen={() => setStep("invitation")} />
+          </div>
         )}
 
         {step === "invitation" && (
