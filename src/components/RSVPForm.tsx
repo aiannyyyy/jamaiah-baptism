@@ -1,16 +1,29 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import type { LucideIcon } from "lucide-react";
-import { User, Church, Gift, Heart, MessageCircle, PartyPopper, CheckCircle2 } from "lucide-react";
+import {
+  User,
+  Church,
+  Gift,
+  Heart,
+  MessageCircle,
+  PartyPopper,
+  CheckCircle2,
+  Car,
+  Info,
+} from "lucide-react";
 import {
   RSVP_OPTIONS,
   RSVP_HEADING,
   CELEBRANT,
   SENDING_LOVE_NOTE,
   THANK_YOU_MESSAGES,
+  PARKING_INFO,
+  PARKING_QUESTION,
+  PARKING_OPTIONS,
 } from "../constants/eventData";
 import { submitRSVP } from "../utils/submitRSVP";
-import type { RSVPOptionId, SubmitStatus } from "../types";
+import type { RSVPOptionId, ParkingOptionId, SubmitStatus } from "../types";
 
 const OPTION_ICONS: Record<RSVPOptionId, LucideIcon> = {
   church_reception: Church,
@@ -21,19 +34,22 @@ const OPTION_ICONS: Record<RSVPOptionId, LucideIcon> = {
 export default function RSVPForm() {
   const [name, setName] = useState("");
   const [selected, setSelected] = useState<RSVPOptionId | null>(null);
+  const [vehicle, setVehicle] = useState<ParkingOptionId | null>(null);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const [submittedChoice, setSubmittedChoice] = useState<RSVPOptionId | null>(null);
 
-  const canSubmit = name.trim() !== "" && selected !== null && status !== "submitting";
+  const canSubmit =
+    name.trim() !== "" && selected !== null && vehicle !== null && status !== "submitting";
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!canSubmit || !selected) return;
+    if (!canSubmit || !selected || !vehicle) return;
 
     submitRSVP({
       guestName: name.trim(),
       attendance: selected,
+      vehicle: vehicle,
       message: message.trim(),
       submittedAt: new Date().toLocaleString("en-PH", {
         timeZone: "Asia/Manila",
@@ -49,6 +65,7 @@ export default function RSVPForm() {
   function handleReset() {
     setName("");
     setSelected(null);
+    setVehicle(null);
     setMessage("");
     setStatus("idle");
     setSubmittedChoice(null);
@@ -134,12 +151,29 @@ export default function RSVPForm() {
           </div>
         )}
 
+        <ParkingInfoCard />
+
+        <p className="font-serif text-blush-600 text-xs sm:text-sm text-center font-semibold pt-1">
+          {PARKING_QUESTION}
+        </p>
+
+        <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+          {PARKING_OPTIONS.map((opt) => (
+            <ParkingOptionCard
+              key={opt.id}
+              option={opt}
+              isSelected={vehicle === opt.id}
+              onSelect={() => setVehicle(opt.id)}
+            />
+          ))}
+        </div>
+
         <MessageInput value={message} onChange={setMessage} />
 
         <SubmitButton disabled={!canSubmit} />
 
         <p className="text-center text-[10px] sm:text-xs text-blush-500 font-serif italic pt-1">
-          We'll use your response for reception headcount and seating arrangement.
+          Your RSVP will help us finalize our headcount and prepare accordingly.
         </p>
       </form>
     </section>
@@ -178,6 +212,46 @@ function OptionCard({ option, isSelected, onSelect }: OptionCardProps) {
     <button type="button" onClick={onSelect} className={base + " " + (isSelected ? selectedStyle : unselectedStyle)}>
       <Icon className={"w-5 h-5 sm:w-6 sm:h-6 mb-1 sm:mb-1.5 " + (isSelected ? "text-white fill-white/30" : "text-blush-400")} />
       <p className="font-serif font-semibold text-[10px] sm:text-xs leading-tight mb-0.5 sm:mb-1 uppercase tracking-wide">
+        {option.title}
+      </p>
+      <p className={"text-[8px] sm:text-[10px] leading-tight " + (isSelected ? "text-white/90" : "text-blush-500")}>
+        {option.description}
+      </p>
+    </button>
+  );
+}
+
+function ParkingInfoCard() {
+  return (
+    <div className="bg-blush-100 rounded-2xl p-3 sm:p-4 flex gap-2.5 sm:gap-3 items-start">
+      <Info className="w-4 h-4 sm:w-5 sm:h-5 text-blush-500 shrink-0 mt-0.5" />
+      <div>
+        <p className="font-serif font-semibold text-blush-600 text-xs sm:text-sm mb-1">
+          {PARKING_INFO.heading}
+        </p>
+        <p className="font-serif text-blush-600 text-[11px] sm:text-xs leading-relaxed">
+          {PARKING_INFO.message}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+type ParkingOptionCardProps = {
+  option: (typeof PARKING_OPTIONS)[number];
+  isSelected: boolean;
+  onSelect: () => void;
+};
+
+function ParkingOptionCard({ option, isSelected, onSelect }: ParkingOptionCardProps) {
+  const base = "rounded-xl sm:rounded-2xl p-2.5 sm:p-3 text-center transition-all shadow-soft border-2 flex flex-col items-center min-h-[90px] sm:min-h-[100px] justify-center";
+  const selectedStyle = "bg-blush-500 text-white border-blush-600";
+  const unselectedStyle = "bg-white/70 backdrop-blur-sm text-blush-700 border-transparent hover:border-blush-300";
+
+  return (
+    <button type="button" onClick={onSelect} className={base + " " + (isSelected ? selectedStyle : unselectedStyle)}>
+      <Car className={"w-5 h-5 sm:w-6 sm:h-6 mb-1 sm:mb-1.5 " + (isSelected ? "text-white" : "text-blush-400")} />
+      <p className="font-serif font-semibold text-[10px] sm:text-xs leading-tight mb-0.5 sm:mb-1">
         {option.title}
       </p>
       <p className={"text-[8px] sm:text-[10px] leading-tight " + (isSelected ? "text-white/90" : "text-blush-500")}>

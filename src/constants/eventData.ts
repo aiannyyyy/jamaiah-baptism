@@ -81,4 +81,25 @@ export const THANK_YOU_MESSAGES = {
   },
 } as const;
 
+export const PARKING_INFO = {
+  heading: "Parking Information",
+  message:
+    "As our reception will be held at our home, parking space is limited. If you'll be bringing a vehicle, please let us know in your RSVP so we can make the necessary parking arrangements. We'll do our best to accommodate everyone.",
+} as const;
+
+export const PARKING_QUESTION = "Will you be bringing a vehicle?";
+
+export const PARKING_OPTIONS = [
+  {
+    id: "bringing_vehicle",
+    title: "Yes, Bringing a Vehicle",
+    description: "I'll need a parking space.",
+  },
+  {
+    id: "no_vehicle",
+    title: "No Vehicle",
+    description: "I won't be bringing a vehicle.",
+  },
+] as const;
+
 export const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwV8-gIfzLAY0yR50JoTksIAx6LE1UGfLmf5xhMKu1Qg25x4okHUlyBuA4WWySz6mvheg/exec";

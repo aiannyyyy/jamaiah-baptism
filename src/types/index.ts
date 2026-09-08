@@ -5,11 +5,14 @@ import { RSVP_OPTIONS } from "../constants/eventData";
 // the types stay in sync.
 export type RSVPOptionId = (typeof RSVP_OPTIONS)[number]["id"];
 
-export interface RSVPSubmission {
+export type RSVPSubmission = {
   guestName: string;
   attendance: RSVPOptionId;
-  message?: string;
+  vehicle: ParkingOptionId;
+  message: string;
   submittedAt: string;
-}
+};
+
+export type ParkingOptionId = "bringing_vehicle" | "no_vehicle";
 
 export type SubmitStatus = "idle" | "submitting" | "success" | "error";
