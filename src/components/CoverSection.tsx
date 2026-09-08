@@ -10,7 +10,7 @@ export default function CoverSection({ onOpen }: Props) {
     <section className="min-h-[100dvh] flex flex-col items-center justify-center px-4 sm:px-6 text-center relative py-10">
       <div className="w-48 sm:w-64 md:w-72 aspect-square rounded-3xl overflow-hidden shadow-soft mb-6 sm:mb-8">
         <img
-          src="/bg-baptism.png"
+          src="/bg-baptism.jpg"
           alt="Jamaiah Gabrielle"
           className="w-full h-full object-cover object-center"
         />
