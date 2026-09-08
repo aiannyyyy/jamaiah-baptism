@@ -7,7 +7,9 @@ import Footer from "./components/Footer";
 
 export default function App() {
   const [opened, setOpened] = useState(false);
+  const [accepted, setAccepted] = useState(false);
   const invitationRef = useRef<HTMLDivElement>(null);
+  const rsvpRef = useRef<HTMLDivElement>(null);
 
   function handleToggle() {
     if (!opened) {
@@ -17,8 +19,16 @@ export default function App() {
       }, 100);
     } else {
       setOpened(false);
+      setAccepted(false);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
+  }
+
+  function handleAccept() {
+    setAccepted(true);
+    setTimeout(() => {
+      rsvpRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   }
 
   return (
@@ -28,10 +38,15 @@ export default function App() {
 
         {opened && (
           <div ref={invitationRef} className="animate-fade-in">
-            <SpecialInvitation />
-            <EventDetails />
-            <RSVPForm />
-            <Footer />
+            {!accepted ? (
+              <SpecialInvitation onAccept={handleAccept} />
+            ) : (
+              <div ref={rsvpRef} className="animate-fade-in">
+                <EventDetails />
+                <RSVPForm />
+                <Footer />
+              </div>
+            )}
           </div>
         )}
       </div>
