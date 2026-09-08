@@ -40,16 +40,20 @@ export default function RSVPForm() {
   const [submittedChoice, setSubmittedChoice] = useState<RSVPOptionId | null>(null);
 
   const canSubmit =
-    name.trim() !== "" && selected !== null && vehicle !== null && status !== "submitting";
+    name.trim() !== "" &&
+    selected !== null &&
+    (selected === "sending_love" || vehicle !== null) &&
+    status !== "submitting";
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!canSubmit || !selected || !vehicle) return;
+    if (!canSubmit || !selected) return;
+    if (selected !== "sending_love" && !vehicle) return;
 
     submitRSVP({
       guestName: name.trim(),
       attendance: selected,
-      vehicle: vehicle,
+      vehicle: selected === "sending_love" ? "not_applicable" : (vehicle as ParkingOptionId),
       message: message.trim(),
       submittedAt: new Date().toLocaleString("en-PH", {
         timeZone: "Asia/Manila",
@@ -151,22 +155,26 @@ export default function RSVPForm() {
           </div>
         )}
 
-        <ParkingInfoCard />
+        {selected !== "sending_love" && (
+          <>
+            <ParkingInfoCard />
 
-        <p className="font-serif text-blush-600 text-xs sm:text-sm text-center font-semibold pt-1">
-          {PARKING_QUESTION}
-        </p>
+            <p className="font-serif text-blush-600 text-xs sm:text-sm text-center font-semibold pt-1">
+              {PARKING_QUESTION}
+            </p>
 
-        <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
-          {PARKING_OPTIONS.map((opt) => (
-            <ParkingOptionCard
-              key={opt.id}
-              option={opt}
-              isSelected={vehicle === opt.id}
-              onSelect={() => setVehicle(opt.id)}
-            />
-          ))}
-        </div>
+            <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+              {PARKING_OPTIONS.map((opt) => (
+                <ParkingOptionCard
+                  key={opt.id}
+                  option={opt}
+                  isSelected={vehicle === opt.id}
+                  onSelect={() => setVehicle(opt.id)}
+                />
+              ))}
+            </div>
+          </>
+        )}
 
         <MessageInput value={message} onChange={setMessage} />
 

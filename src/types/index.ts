@@ -13,6 +13,6 @@ export type RSVPSubmission = {
   submittedAt: string;
 };
 
-export type ParkingOptionId = "bringing_vehicle" | "no_vehicle";
+export type ParkingOptionId = "bringing_vehicle" | "no_vehicle" | "not_applicable";
 
 export type SubmitStatus = "idle" | "submitting" | "success" | "error";
