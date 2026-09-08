@@ -19,16 +19,13 @@ export default function App() {
 
         {step === "invitation" && (
           <div className="animate-fade-in">
-            <SpecialInvitation
-              onAccept={() => setStep("rsvp")}
-              onBack={() => setStep("cover")}
-            />
+            <SpecialInvitation onAccept={() => setStep("rsvp")} />
           </div>
         )}
 
         {step === "rsvp" && (
           <div className="animate-fade-in">
-            <BackButton onClick={() => setStep("invitation")} />
+            <BackButton onClick={() => setStep("cover")} />
             <EventDetails />
             <RSVPForm />
             <Footer />
