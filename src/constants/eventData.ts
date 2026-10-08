@@ -31,7 +31,7 @@ export const BAPTISM = {
 export const RECEPTION = {
   time: "11:00 AM onwards",
   venue: "Ticatic Residence",
-  mapUrl: "https://maps.app.goo.gl/YbKswhpn2ZYtSNrB8",
+  mapUrl: "",
 } as const;
 
 export const RSVP_HEADING = "We'd love to know how you'll be celebrating with Gabbie.";
